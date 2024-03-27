@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Rectangle Header</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        #map {
+            height: 500px;
+            width: 90%;
+            margin-top: 80px; 
+            border: 2px solid black; 
+            margin-left: auto; /* Center the map horizontally */
+            margin-right: auto; /* Center the map horizontally */
+        }
+        .header {
+            background-color: #004477;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            border: 3px solid black;
+        }
+        .buttonAdd {
+            padding: 10px 20px;
+            background-color: #004477;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100px; 
+        }
+        .inputAdd {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px; 
+            margin-bottom: 10px;
+        }
+        .buttonContainer {
+            bottom: 70px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; 
+        }
+        .buttonContainer button {
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .return-button {
+            background-color: #999999;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            right: 20px; 
+            top: 20px;
+            float: right;
+        }
+        .text {
+            position: absolute;
+            top: 120px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Drake University Pothole Detection</h1>
+    </div>
+
+    <br>
+
+    <div class="buttonContainer">
+        <input type="password" id="password" class="inputAdd" placeholder="Enter Password">
+        <button class="buttonAdd" onclick="checkPassword()">Submit</button>
+    </div>
+    
+    <div class="text">
+        <p>Computer Science Capstone Project.</p>
+        <p>Contributors: Max, Ryan, Adam, and Mateo</p>
+        <p>Project Description: Start here...</p>
+    </div>
+
+    <div id="map"></div>
+
+    <br>
+    <br>
+    <br>
+
+    <script>
+        var map = L.map('map').setView([41.6031, -93.6546], 16); 
+    
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        // Iterate over the records and add red markers for each entry
+        {% for record in records %}
+            var redMarker = L.marker([{{ record.Latitude }}, {{ record.Longitude }}], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: "<div style='background-color: red; border: 1px solid black; width: 5px; height: 5px; border-radius: 50%;'></div>",
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                })
+            }).addTo(map);
+        {% endfor %}
+    </script>
+    
+    
+    <script>
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+            if (password === "edit") {
+                window.location.href = "edit.html";
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>

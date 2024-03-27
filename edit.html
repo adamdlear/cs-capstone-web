@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Page</title>
+    <style>
+        .header {
+            background-color: #004477;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            border: 3px solid black;
+        }
+        .buttonAdd,
+        .buttonDelete{
+            padding: 10px 20px;
+            background-color: #004477;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100px;
+        }
+        .inputAdd,
+        .inputDelete{
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px;
+            margin-top: 10px;
+            margin-right: 10px; /* Add margin to separate from the button */
+        }
+        .buttonContainer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-right: 20px; /* Add margin to separate from right edge */
+        }
+        .return-button {
+            background-color: #999999;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            float: right; /* Align the button to the right */
+            margin-top: 10px;
+            margin-right: 20px; /* Add margin to separate from right edge */
+        }
+        table {
+            margin-top: 20px; /* Adjust as needed */
+            margin-left: 20px; /* Adjust as needed */
+            width: calc(100% - 40px); /* Adjust table width */
+            border-collapse: collapse; /* Collapse table borders */
+        }
+        th, td {
+            padding: 10px; /* Padding for table cells */
+            border: 1px solid #ddd; /* Border for table cells */
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Drake University Pothole Detection - Editors Page</h1>
+</div>
+
+<table>
+    <tr>
+        <th>PotholeID</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+    </tr>
+    {% for record in records %}
+    <tr>
+        <td>{{ record[0] }}</td>
+        <td>{{ record[1] }}</td>
+        <td>{{ record[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="buttonContainer">
+    <input type="password" id="potholeId" class="inputAdd" placeholder="Enter Pothole ID">
+    <input type="password" id="latitude" class="inputAdd" placeholder="Enter Latitude">
+    <input type="password" id="longitude" class="inputAdd" placeholder="Enter Longitude">
+    <button class="buttonAdd" onclick="addEntry()">Add</button>
+</div>
+
+<div class="buttonContainer">
+    <input type="password" id="passwordDelete" class="inputDelete" placeholder="Enter Pothole ID">
+    <button class="buttonDelete" onclick="deleteEntry()">Delete</button>
+</div>
+
+<div>
+    <button class="return-button" onclick="returnToMainPage()">Return to Main Page</button>
+</div>
+
+<script>
+    function returnToMainPage() {
+        window.location.href = "index.html";
+    }
+
+    function addEntry() {
+    var potholeId = document.getElementById('potholeId').value;
+    var latitude = document.getElementById('latitude').value;
+    var longitude = document.getElementById('longitude').value;
+    
+    // Send a POST request to the Flask route to add the entry
+    fetch('/edit.html', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=add&PotholeID=' + encodeURIComponent(potholeId) + '&Latitude=' + encodeURIComponent(latitude) + '&Longitude=' + encodeURIComponent(longitude),
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload the page to reflect changes
+            window.location.reload();
+        } else {
+            // Handle error
+            console.error('Error adding entry');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function deleteEntry() {
+    var potholeId = document.getElementById('passwordDelete').value;
+    
+    // Send a POST request to the Flask route to delete the entry
+    fetch('/edit.html', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=delete&PotholeID=' + encodeURIComponent(potholeId),
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload the page to reflect changes
+            window.location.reload();
+        } else {
+            // Handle error
+            console.error('Error deleting entry');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
+
+</body>
+</html>
